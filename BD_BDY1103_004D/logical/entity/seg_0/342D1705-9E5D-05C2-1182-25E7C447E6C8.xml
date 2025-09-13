@@ -1,0 +1,101 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="342D1705-9E5D-05C2-1182-25E7C447E6C8" name="COTIZACION">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-12 00:34:45 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<engineerTo>
+<item key="5A267553-2CB6-8F20-B31E-5C10804CF0DD" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_coti" id="7CF38A47-DEAB-54FB-B21E-132A9A5A7CA3">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-12 00:34:52 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<engineerTo>
+<item key="5A267553-2CB6-8F20-B31E-5C10804CF0DD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<ownDataTypeParameters>,10,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha" id="6233AE86-0E09-56C2-A0DE-AC8D402B1CE7">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-12 00:35:04 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<engineerTo>
+<item key="5A267553-2CB6-8F20-B31E-5C10804CF0DD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="monto_total" id="4C8C8564-1836-6BC6-C874-1024B0F74F66">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-12 00:35:36 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<engineerTo>
+<item key="5A267553-2CB6-8F20-B31E-5C10804CF0DD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,10,2</ownDataTypeParameters>
+</Attribute>
+<Attribute name="estado" id="E3D89498-086F-9BE6-E796-EC5255D60AEA">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-12 00:35:56 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<engineerTo>
+<item key="5A267553-2CB6-8F20-B31E-5C10804CF0DD" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_cli" id="04F8ECCE-C3CE-B982-D2E4-3D4BEB6802A3">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-12 00:40:04 UTC</createdTime>
+<generatorID>9B884EE9-B48B-16B6-A855-B8F696C4F72B</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<engineerTo>
+<item key="5A267553-2CB6-8F20-B31E-5C10804CF0DD" value="true"/>
+</engineerTo>
+<referedAttribute>C02E9582-1855-D3AC-9832-BFEBCD8D2204</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="EA8C6ED4-721B-ABC3-08A8-0945F169CDCA" name="Cotizacion PK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-12 00:35:02 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="5A267553-2CB6-8F20-B31E-5C10804CF0DD" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>7CF38A47-DEAB-54FB-B21E-132A9A5A7CA3</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
