@@ -1,0 +1,77 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="9B9359CC-30A2-3BB4-05EA-DC1F63E3C5BE" name="PRODUCTO_PROVEEDOR">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROV_id_prov" id="461A8A48-7DD7-DCF6-3384-C32B40551396">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="206017B6-393E-AB53-41F1-1034FA16E133" referredColumn="746EC05C-0BB0-CC6E-9010-D4B9CA9E713F"/>
+</associations>
+</Column>
+<Column name="PROD_id_pro" id="642613B8-11E5-4791-68A7-38899C6C6F93">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="4FA29065-252A-8F39-ADD1-06357F34C452" referredColumn="F0A2A970-F07C-51AF-2366-3E6CE8798DC9"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="00A433A4-886D-0220-4E8E-B53F500A76B5" name="PRODUCTO_PROVEEDOR_PK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="461A8A48-7DD7-DCF6-3384-C32B40551396"/>
+<colUsage columnID="642613B8-11E5-4791-68A7-38899C6C6F93"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="864C2AA9-BE2A-73C3-F356-B0825EAA3E3A" name="PRODUCTO_PROVEEDOR_PROV_FK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>78C7C733-6F8C-E79F-3903-C42779054BE6</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="461A8A48-7DD7-DCF6-3384-C32B40551396"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7D90D869-B260-CCDE-A660-831946E5F901" name="PRODUCTO_PROVEEDOR_PROD_FK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>78C7C733-6F8C-E79F-3903-C42779054BE6</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="642613B8-11E5-4791-68A7-38899C6C6F93"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

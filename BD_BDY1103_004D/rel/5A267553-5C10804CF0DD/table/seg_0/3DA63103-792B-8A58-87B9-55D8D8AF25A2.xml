@@ -1,0 +1,118 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="3DA63103-792B-8A58-87B9-55D8D8AF25A2" name="DETALLE_COT">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>1C4F6A6D-15EE-9A90-D7ED-0992F5403AEE</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_det" id="AD9AFFCA-0709-7A59-C56D-CE0BBE481C64">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>0EF2384B-89CC-3794-559C-FE8DC256533D</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<ownDataTypeParameters>,10,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="cantidad" id="D9B73DC2-5D94-D84E-CCD2-1429E78487FE">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>B13BC7F5-2537-0154-C09E-30F66166FB6D</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>4</dataTypePrecision>
+<ownDataTypeParameters>,4,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="precio_unitario" id="7EBBDCAB-3147-50A3-6F03-E1CF181C3CDC">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>19CDD135-D591-9A14-DCE8-0AB7089C56E4</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,10,2</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="COTIZACION_id_coti" id="37AB86A9-6994-6DC2-3C8F-8A33276E1419">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>84DE72D4-F044-EEE3-C47D-5B924A07CC03</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="54707905-E101-D8EA-357A-98CDE9688B6A" referredColumn="C9B28D09-BDF6-583E-6F81-E10371291689"/>
+</associations>
+</Column>
+<Column name="PROD_id_pro" id="06767A73-32AE-0504-CF0F-51CC87FF343A">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>ABE393F5-1CF8-79D6-06E4-C54E065A2A11</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0DC76486-0033-85F1-2E54-5D76E90F6806" referredColumn="F0A2A970-F07C-51AF-2366-3E6CE8798DC9"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="00554177-3F93-9FC5-AE1E-D17E6DBEB12E" name="DETALLE_COT_PK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>97CF34DE-C648-D8AD-837E-C01FA9207E1E</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="AD9AFFCA-0709-7A59-C56D-CE0BBE481C64"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="DE40E84D-F6DD-9EF3-E60A-B07E73D3577B" name="DETALLE_COT_COTIZACION_FK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>60491835-9466-592E-6C05-5E5F222B737A</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="37AB86A9-6994-6DC2-3C8F-8A33276E1419"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D500E4BE-3D24-D4C5-4BE8-CEF614889F59" name="DETALLE_COT_PROD_FK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>3F55D563-8059-2BFB-2064-DC4089E75CB7</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="06767A73-32AE-0504-CF0F-51CC87FF343A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

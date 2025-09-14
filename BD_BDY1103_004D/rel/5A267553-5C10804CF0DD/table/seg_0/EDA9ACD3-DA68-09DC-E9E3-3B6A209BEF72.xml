@@ -1,0 +1,101 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="EDA9ACD3-DA68-09DC-E9E3-3B6A209BEF72" name="COTIZACION">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>342D1705-9E5D-05C2-1182-25E7C447E6C8</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_coti" id="C9B28D09-BDF6-583E-6F81-E10371291689">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>7CF38A47-DEAB-54FB-B21E-132A9A5A7CA3</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<ownDataTypeParameters>,10,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha" id="EE0694BC-4891-6B75-6A8E-481FB6B11181">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>6233AE86-0E09-56C2-A0DE-AC8D402B1CE7</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="monto_total" id="1CAEA2BB-60B2-8BD0-99F3-2AA9A750A049">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>4C8C8564-1836-6BC6-C874-1024B0F74F66</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,10,2</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="estado" id="07DBFD37-F77D-11A4-8B35-C580ECC5BFF5">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>E3D89498-086F-9BE6-E796-EC5255D60AEA</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CLIENTE_id_cli" id="864C0BD1-DCDE-FDF6-C22D-C840F7031773">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>04F8ECCE-C3CE-B982-D2E4-3D4BEB6802A3</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="600B4A0C-924B-564B-9587-F6F909A756D7" referredColumn="3CE8C419-57D5-81D7-8519-71FB584FA774"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="7635CE7F-2F47-9ACB-3A1C-FE3C54248393" name="COTIZACION_PK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>EA8C6ED4-721B-ABC3-08A8-0945F169CDCA</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C9B28D09-BDF6-583E-6F81-E10371291689"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="038C0AB3-6453-3920-2202-F92D5F70AC2C" name="COTIZACION_CLIENTE_FK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>9B884EE9-B48B-16B6-A855-B8F696C4F72B</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="864C0BD1-DCDE-FDF6-C22D-C840F7031773"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,99 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="62A7C39D-BC62-A891-5A2C-B65DE6BAD3CA" name="ORDEN_COM">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>44CD2227-9470-193A-ADA0-1C4E8A64D614</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_ord" id="0DCF5CD5-53EA-DA46-3937-6DBEF2F46691">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>A273F37A-4CE9-8CCE-D7FA-9538D650DB8E</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<ownDataTypeParameters>,10,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_pedido" id="0B130541-DA93-2AA7-B7A3-956F107CE1F8">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>E06C0034-874E-5EA1-E3C8-44AF69C50668</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="estado_pedido" id="5665872C-7F0D-1CAB-D224-9E1507C7335F">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>F014EDFB-DC3C-2143-0A9F-26AA94124D73</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_esperada_entrega" id="408E6BF0-5882-DA14-7E72-7E4AB8326CB7">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>F29FFE91-AC13-BF07-9574-27E84D2077AF</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROV_id_prov" id="7128525A-DB71-A052-825C-A6915407C5EE">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>21813393-639B-879C-D30B-EFF2343FB488</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9FAA1DB5-57AE-33FA-606B-AC94E9E784DE" referredColumn="746EC05C-0BB0-CC6E-9010-D4B9CA9E713F"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="7F10003F-E7B7-D4FC-4619-81E632B2D0DF" name="ORDEN_COM_PK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>952488EE-C54F-69ED-7157-D277080695FE</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0DCF5CD5-53EA-DA46-3937-6DBEF2F46691"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="01904646-BCC9-4243-97A8-C50CD3F16430" name="ORDEN_COM_PROV_FK">
+<createdBy>matias</createdBy>
+<createdTime>2025-09-14 00:34:29 UTC</createdTime>
+<generatorID>28D4FE18-67E2-A373-B142-5AF85E3D1C67</generatorID>
+<ownerDesignName>BD_BDY1103_004D</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7128525A-DB71-A052-825C-A6915407C5EE"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
