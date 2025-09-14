@@ -1,5 +1,6 @@
-
--- definicion tipos de datos compuestos
+-- ------------------------------------------------
+-- Definiciones de tipos de datos compuestos
+-- ------------------------------------------------
 CREATE OR REPLACE TYPE producto_rec IS OBJECT (
     id_pro      NUMBER,
     cantidad    NUMBER,
@@ -11,9 +12,11 @@ CREATE OR REPLACE TYPE lista_productos_varray IS VARRAY(100) OF producto_rec;
 /
 
 
-
---  PROCEDIMIENTO ALMACENADO
---  inserta una nueva cotización y todos sus detalles en una sola operación.
+-- ------------------------------------------------
+-- 1. PROCEDIMIENTO ALMACENADO
+--    Inserta una nueva cotización y todos sus detalles en una sola operación.
+--    Ahora utiliza el tipo VARRAY.
+-- ------------------------------------------------
 
 CREATE OR REPLACE PROCEDURE insertar_cotizacion_completa (
     p_cotizacion_id   IN  NUMBER,
@@ -70,9 +73,10 @@ END insertar_cotizacion_completa;
 /
 
 
--- FUNCIÓN ALMACENADA
---   Calcula el monto total de una cotización específica.
-
+-- ------------------------------------------------
+-- 2. FUNCIÓN ALMACENADA
+--    Calcula el monto total de una cotización específica.
+-- ------------------------------------------------
 
 CREATE OR REPLACE FUNCTION calcular_monto_total_cot (
     p_cotizacion_id IN NUMBER
@@ -101,8 +105,45 @@ EXCEPTION
 END calcular_monto_total_cot;
 /
 
--- CURSOR EXPLÍCITO COMPLEJO
--- Busca productos por ID con información detallada de proveedores y ubicación
+
+-- ------------------------------------------------
+-- 3. TRIGGER
+--    Actualiza el monto total de la cotización después de una inserción,
+--    actualización o eliminación en los detalles.
+-- ------------------------------------------------
+CREATE OR REPLACE TRIGGER actualizar_monto_cotizacion
+AFTER INSERT OR UPDATE OR DELETE ON DETALLE_COT
+FOR EACH ROW
+DECLARE
+    PRAGMA AUTONOMOUS_TRANSACTION;
+    v_cotizacion_id NUMBER;
+BEGIN
+    IF INSERTING OR UPDATING THEN
+        v_cotizacion_id := :NEW.COTIZACION_id_coti;
+    ELSE
+        v_cotizacion_id := :OLD.COTIZACION_id_coti;
+    END IF;
+
+    UPDATE COTIZACION
+    SET
+        monto_total = calcular_monto_total_cot(v_cotizacion_id)
+    WHERE
+        id_coti = v_cotizacion_id;
+    
+    COMMIT;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        DBMS_OUTPUT.PUT_LINE('Error en el trigger actualizar_monto_cotizacion: ' || SQLERRM);
+END actualizar_monto_cotizacion;
+/
+
+
+-- ------------------------------------------------
+-- 4. CURSOR EXPLÍCITO COMPLEJO
+--    Busca productos por ID con información detallada de proveedores y ubicación.
+-- ------------------------------------------------
 
 DECLARE
     CURSOR cursor_producto_detallado(p_producto_id NUMBER) IS
@@ -123,7 +164,7 @@ DECLARE
         GROUP BY p.id_pro, p.nom_pro, p.ref, pr.id_prov, pr.nom_prov, c.nom_com, r.nom_reg
         ORDER BY pr.nom_prov;
 
-    v_producto_id NUMBER := 1; -- ID del producto a buscar
+    v_producto_id NUMBER := 1;
     v_registro cursor_producto_detallado%ROWTYPE;
     v_encontrado BOOLEAN := FALSE;
 BEGIN
@@ -148,9 +189,9 @@ BEGIN
         
         IF v_registro.id_prov IS NOT NULL THEN
             DBMS_OUTPUT.PUT_LINE('- ' || v_registro.nom_prov || 
-                               ' (ID: ' || v_registro.id_prov || ')');
+                                 ' (ID: ' || v_registro.id_prov || ')');
             DBMS_OUTPUT.PUT_LINE('  Ubicación: ' || v_registro.comuna_proveedor || 
-                               ', ' || v_registro.region_proveedor);
+                                 ', ' || v_registro.region_proveedor);
         END IF;
     END LOOP;
     
@@ -173,18 +214,18 @@ END;
 /
 
 
--- PROCEDIMIENTO CON LOOPS ANIDADOS
--- Genera reporte de cotizaciones agrupadas por cliente y región
+-- ------------------------------------------------
+-- 5. PROCEDIMIENTO CON LOOPS ANIDADOS
+--    Genera reporte de cotizaciones agrupadas por cliente y región.
+-- ------------------------------------------------
 
 CREATE OR REPLACE PROCEDURE generar_reporte_cotizaciones_region
 IS
-    -- Cursor para regiones
     CURSOR cursor_regiones IS
         SELECT id_reg, nom_reg
         FROM REGION
         ORDER BY nom_reg;
     
-    -- Cursor para clientes por región
     CURSOR cursor_clientes_region(p_region_id NUMBER) IS
         SELECT c.id_cli, c.nom_emp, c.p_nom, c.p_ape, com.nom_com
         FROM CLIENTE c
@@ -192,7 +233,6 @@ IS
         WHERE com.REGION_id_reg = p_region_id
         ORDER BY c.nom_emp;
     
-    -- Cursor para cotizaciones por cliente
     CURSOR cursor_cotizaciones_cliente(p_cliente_id NUMBER) IS
         SELECT cot.id_coti, cot.fecha, cot.monto_total, cot.estado,
                COUNT(det.id_det) AS total_items
@@ -215,7 +255,6 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('======================================');
     DBMS_OUTPUT.PUT_LINE('');
     
-    -- Loop externo: Por cada región
     FOR reg IN cursor_regiones LOOP
         v_contador_regiones := v_contador_regiones + 1;
         v_total_cotizaciones_region := 0;
@@ -224,7 +263,6 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('REGIÓN: ' || reg.nom_reg || ' (ID: ' || reg.id_reg || ')');
         DBMS_OUTPUT.PUT_LINE(RPAD('=', LENGTH('REGIÓN: ' || reg.nom_reg || ' (ID: ' || reg.id_reg || ')'), '='));
         
-        -- Loop intermedio: Por cada cliente en la región
         FOR cli IN cursor_clientes_region(reg.id_reg) LOOP
             v_total_cotizaciones_cliente := 0;
             v_monto_total_cliente := 0;
@@ -235,24 +273,22 @@ BEGIN
             DBMS_OUTPUT.PUT_LINE('  Comuna: ' || cli.nom_com);
             DBMS_OUTPUT.PUT_LINE('  ' || RPAD('-', 50, '-'));
             
-            -- Loop interno: Por cada cotización del cliente
             FOR cot IN cursor_cotizaciones_cliente(cli.id_cli) LOOP
                 v_total_cotizaciones_cliente := v_total_cotizaciones_cliente + 1;
                 v_monto_total_cliente := v_monto_total_cliente + cot.monto_total;
                 
                 DBMS_OUTPUT.PUT_LINE('    Cotización #' || cot.id_coti || 
-                                   ' | Fecha: ' || TO_CHAR(cot.fecha, 'DD/MM/YYYY') ||
-                                   ' | Estado: ' || cot.estado);
+                                     ' | Fecha: ' || TO_CHAR(cot.fecha, 'DD/MM/YYYY') ||
+                                     ' | Estado: ' || cot.estado);
                 DBMS_OUTPUT.PUT_LINE('    Monto: $' || TO_CHAR(cot.monto_total, '999,999,990.00') ||
-                                   ' | Items: ' || cot.total_items);
+                                     ' | Items: ' || cot.total_items);
                 DBMS_OUTPUT.PUT_LINE('');
             END LOOP;
             
-            -- Resumen por cliente
             IF v_total_cotizaciones_cliente > 0 THEN
                 DBMS_OUTPUT.PUT_LINE('  RESUMEN CLIENTE: ' || v_total_cotizaciones_cliente || 
-                                   ' cotizaciones, Total: $' || 
-                                   TO_CHAR(v_monto_total_cliente, '999,999,990.00'));
+                                     ' cotizaciones, Total: $' || 
+                                     TO_CHAR(v_monto_total_cliente, '999,999,990.00'));
                 
                 v_total_cotizaciones_region := v_total_cotizaciones_region + v_total_cotizaciones_cliente;
                 v_monto_total_region := v_monto_total_region + v_monto_total_cliente;
@@ -263,7 +299,6 @@ BEGIN
             DBMS_OUTPUT.PUT_LINE('');
         END LOOP;
         
-        -- Resumen por región
         DBMS_OUTPUT.PUT_LINE('RESUMEN REGIÓN ' || reg.nom_reg || ':');
         DBMS_OUTPUT.PUT_LINE('Total cotizaciones: ' || v_total_cotizaciones_region);
         DBMS_OUTPUT.PUT_LINE('Monto total: $' || TO_CHAR(v_monto_total_region, '999,999,990.00'));
@@ -274,7 +309,6 @@ BEGIN
         v_total_general := v_total_general + v_monto_total_region;
     END LOOP;
     
-    -- Resumen general
     DBMS_OUTPUT.PUT_LINE('RESUMEN GENERAL DEL REPORTE:');
     DBMS_OUTPUT.PUT_LINE('============================');
     DBMS_OUTPUT.PUT_LINE('Regiones procesadas: ' || v_contador_regiones);
@@ -287,17 +321,32 @@ EXCEPTION
 END generar_reporte_cotizaciones_region;
 /
 
---  BLOQUE DE PRUEBA
---    Ejecutar este bloque para probar los procedimientos y funciones.
+
+-- ------------------------------------------------
+-- 6. BLOQUE DE PRUEBA
+--    Ejecutar este bloque para probar todos los procedimientos, funciones y el trigger.
+-- ------------------------------------------------
 SET SERVEROUTPUT ON;
 
 DECLARE
     v_cotizacion_id   NUMBER := 999;
     v_lista_detalles  lista_productos_varray;
 BEGIN
+    -- Limpiar tablas de la prueba anterior
     DELETE FROM DETALLE_COT WHERE COTIZACION_id_coti = v_cotizacion_id;
     DELETE FROM COTIZACION WHERE id_coti = v_cotizacion_id;
+    
+    -- Insertar datos de prueba para CLIENTE, COMUNA, REGION, PROV y PRODUCTO
+    -- para que los procedimientos y funciones funcionen correctamente.
+    INSERT INTO REGION (id_reg, nom_reg) VALUES (1, 'Región Metropolitana');
+    INSERT INTO COMUNA (id_com, nom_com, REGION_id_reg) VALUES (1, 'Santiago', 1);
+    INSERT INTO CLIENTE (id_cli, nom_emp, correo, p_nom, p_ape, telefono, COMUNA_id_com)
+    VALUES (1, 'Empresa de Prueba', 'prueba@ejemplo.com', 'Nombre', 'Apellido', 123456789, 1);
+    INSERT INTO PROV (id_prov, nom_prov, COMUNA_id_com) VALUES (1, 'Proveedor de Prueba', 1);
+    INSERT INTO PROD (id_pro, nom_pro, ref) VALUES (1, 'Producto de Prueba 1', 100);
+    INSERT INTO PROD (id_pro, nom_pro, ref) VALUES (2, 'Producto de Prueba 2', 200);
 
+    -- 1. Llamar al procedimiento para insertar una nueva cotización
     v_lista_detalles := lista_productos_varray(
         producto_rec(id_pro => 1, cantidad => 5, precio_unitario => 100.00),
         producto_rec(id_pro => 2, cantidad => 2, precio_unitario => 250.00)
@@ -310,8 +359,24 @@ BEGIN
         p_cliente_id_cli  => 1,
         p_detalles_prod   => v_lista_detalles
     );
+    
+    -- 2. Validar que el monto total fue calculado correctamente
+    DBMS_OUTPUT.PUT_LINE('Monto total de cotización (inicial): ' || calcular_monto_total_cot(v_cotizacion_id));
+    
+    -- 3. Actualizar la cantidad de un detalle para probar el trigger
+    DBMS_OUTPUT.PUT_LINE('--- Probando el trigger ---');
+    UPDATE DETALLE_COT
+    SET cantidad = 10
+    WHERE id_det = v_cotizacion_id * 1000 + 1;
 
-    DBMS_OUTPUT.PUT_LINE('El monto total de la cotización es: ' || calcular_monto_total_cot(v_cotizacion_id));
+    -- 4. Mostrar el nuevo monto total actualizado automáticamente por el trigger
+    DBMS_OUTPUT.PUT_LINE('Monto total de cotización (después de update): ' || calcular_monto_total_cot(v_cotizacion_id));
+    DBMS_OUTPUT.PUT_LINE('---------------------------');
+
+    -- 5. Ejecutar el procedimiento del reporte
+    DBMS_OUTPUT.PUT_LINE('');
+    DBMS_OUTPUT.PUT_LINE('--- Ejecutando reporte de cotizaciones ---');
+    generar_reporte_cotizaciones_region;
 
     COMMIT;
 END;
