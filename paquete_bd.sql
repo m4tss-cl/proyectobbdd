@@ -45,7 +45,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
             fecha_pedido,
             estado_pedido,
             fecha_esperada_entrega,
-            PROVEEDOR_id_prov
+            PROV_id_prov
         ) VALUES (
             v_siguiente_id,
             SYSDATE,
@@ -59,7 +59,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
             id_det_com,
             cantidad,
             ORDEN_COM_id_ord,
-            PRODUCTO_id_pro
+            PROD_id_pro
         ) VALUES (
             v_siguiente_id * 1000 + 1,
             p_cantidad,
@@ -86,8 +86,8 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         SELECT COUNT(*)
         INTO v_existe
         FROM PRODUCTO_PROVEEDOR
-        WHERE PROVEEDOR_id_prov = p_proveedor_id
-        AND PRODUCTO_id_pro = p_producto_id;
+        WHERE PROV_id_prov = p_proveedor_id
+        AND PROD_id_pro = p_producto_id;
         
         RETURN v_existe;
         
