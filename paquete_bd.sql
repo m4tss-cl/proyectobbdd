@@ -1,4 +1,12 @@
+-- ================================================
+-- PACKAGE CON COMPONENTES PÚBLICOS Y PRIVADOS
+-- ================================================
+
 CREATE OR REPLACE PACKAGE UtilidadesBd IS
+    -- ============================================
+    -- DECLARACIONES PÚBLICAS (SPEC)
+    -- ============================================
+    
     -- Procedimiento para generar órdenes de compra a proveedores
     PROCEDURE generar_orden_proveedor(
         p_proveedor_id IN NUMBER,
@@ -13,10 +21,65 @@ CREATE OR REPLACE PACKAGE UtilidadesBd IS
         p_producto_id  IN NUMBER
     ) RETURN NUMBER;
     
+    -- Procedimiento para procesar múltiples órdenes de forma masiva
+    PROCEDURE procesar_ordenes_masivas(
+        p_proveedor_id IN NUMBER
+    );
+    
+    -- Función pública para calcular total con descuento
+    FUNCTION calcular_total_con_descuento(
+        p_monto IN NUMBER,
+        p_cantidad IN NUMBER
+    ) RETURN NUMBER;
+    
 END UtilidadesBd;
 /
 
 CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
+
+    -- ============================================
+    -- COMPONENTES PRIVADOS (SOLO EN BODY)
+    -- ============================================
+    
+    -- Constante privada para descuento mínimo
+    c_descuento_minimo CONSTANT NUMBER := 0.05;
+    
+    -- Función PRIVADA: Calcula porcentaje de descuento según cantidad
+    FUNCTION calcular_porcentaje_descuento(p_cantidad IN NUMBER) 
+    RETURN NUMBER 
+    IS
+        v_descuento NUMBER;
+    BEGIN
+        IF p_cantidad >= 100 THEN
+            v_descuento := 0.15; -- 15% descuento
+        ELSIF p_cantidad >= 50 THEN
+            v_descuento := 0.10; -- 10% descuento
+        ELSIF p_cantidad >= 20 THEN
+            v_descuento := 0.05; -- 5% descuento
+        ELSE
+            v_descuento := 0;    -- Sin descuento
+        END IF;
+        
+        RETURN v_descuento;
+    END calcular_porcentaje_descuento;
+    
+    -- Procedimiento PRIVADO: Registra log interno
+    PROCEDURE registrar_log_interno(
+        p_mensaje IN VARCHAR2
+    ) IS
+        PRAGMA AUTONOMOUS_TRANSACTION;
+    BEGIN
+        -- En un caso real, esto insertaría en una tabla de logs
+        DBMS_OUTPUT.PUT_LINE('[LOG INTERNO] ' || TO_CHAR(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') || ' - ' || p_mensaje);
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            NULL; -- Log silencioso
+    END registrar_log_interno;
+
+    -- ============================================
+    -- IMPLEMENTACIÓN DE COMPONENTES PÚBLICOS
+    -- ============================================
 
     PROCEDURE generar_orden_proveedor(
         p_proveedor_id IN NUMBER,
@@ -27,6 +90,9 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         v_siguiente_id  NUMBER;
         v_proveedor_existe NUMBER;
     BEGIN
+        -- Usar función privada para log
+        registrar_log_interno('Iniciando generación de orden para proveedor ' || p_proveedor_id);
+        
         -- Verificar que el proveedor maneja este producto
         v_proveedor_existe := verificar_proveedor_producto(p_proveedor_id, p_producto_id);
         
@@ -50,7 +116,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
             v_siguiente_id,
             SYSDATE,
             'PENDIENTE',
-            SYSDATE + 7, -- 7 días de plazo por defecto
+            SYSDATE + 7,
             p_proveedor_id
         );
         
@@ -69,11 +135,13 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         
         p_orden_id := v_siguiente_id;
         
+        registrar_log_interno('Orden generada exitosamente. ID: ' || p_orden_id);
         DBMS_OUTPUT.PUT_LINE('Orden de compra generada exitosamente. ID: ' || p_orden_id);
         
     EXCEPTION
         WHEN OTHERS THEN
             ROLLBACK;
+            registrar_log_interno('Error al generar orden: ' || SQLERRM);
             RAISE_APPLICATION_ERROR(-20002, 'Error al generar orden: ' || SQLERRM);
     END generar_orden_proveedor;
 
@@ -93,8 +161,65 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         
     EXCEPTION
         WHEN OTHERS THEN
-            DBMS_OUTPUT.PUT_LINE('Error al verificar proveedor-producto: ' || SQLERRM);
+            registrar_log_interno('Error al verificar proveedor-producto: ' || SQLERRM);
             RETURN 0;
     END verificar_proveedor_producto;
+    
+    -- Procedimiento público que usa función privada
+    PROCEDURE procesar_ordenes_masivas(
+        p_proveedor_id IN NUMBER
+    ) IS
+        CURSOR cur_productos IS
+            SELECT DISTINCT pp.PROD_id_pro, p.nom_pro
+            FROM PRODUCTO_PROVEEDOR pp
+            INNER JOIN PROD p ON pp.PROD_id_pro = p.id_pro
+            WHERE pp.PROV_id_prov = p_proveedor_id;
+        
+        v_orden_id NUMBER;
+        v_cantidad_fija NUMBER := 10;
+    BEGIN
+        registrar_log_interno('Procesando órdenes masivas para proveedor ' || p_proveedor_id);
+        
+        FOR rec IN cur_productos LOOP
+            generar_orden_proveedor(
+                p_proveedor_id => p_proveedor_id,
+                p_producto_id => rec.PROD_id_pro,
+                p_cantidad => v_cantidad_fija,
+                p_orden_id => v_orden_id
+            );
+            
+            DBMS_OUTPUT.PUT_LINE('Orden creada para producto: ' || rec.nom_pro);
+        END LOOP;
+        
+        COMMIT;
+        DBMS_OUTPUT.PUT_LINE('Proceso de órdenes masivas completado.');
+        
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('Error en procesamiento masivo: ' || SQLERRM);
+    END procesar_ordenes_masivas;
+    
+    -- Función pública que usa función privada interna
+    FUNCTION calcular_total_con_descuento(
+        p_monto IN NUMBER,
+        p_cantidad IN NUMBER
+    ) RETURN NUMBER IS
+        v_porcentaje NUMBER;
+        v_total NUMBER;
+    BEGIN
+        -- Usar función privada
+        v_porcentaje := calcular_porcentaje_descuento(p_cantidad);
+        v_total := p_monto - (p_monto * v_porcentaje);
+        
+        registrar_log_interno('Descuento aplicado: ' || (v_porcentaje * 100) || '%');
+        
+        RETURN v_total;
+        
+    EXCEPTION
+        WHEN OTHERS THEN
+            RETURN p_monto; -- Devolver monto sin descuento en caso de error
+    END calcular_total_con_descuento;
 
-END UtilidadesBd; 
+END UtilidadesBd;
+/

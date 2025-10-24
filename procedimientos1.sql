@@ -321,6 +321,83 @@ EXCEPTION
 END generar_reporte_cotizaciones_region;
 /
 
+-- ================================================
+-- PROCEDIMIENTOS Y FUNCIONES ADICIONALES
+-- ================================================
+
+-- ------------------------------------------------
+-- PROCEDIMIENTO SIN PARÁMETROS
+-- Actualiza el estado de cotizaciones vencidas
+-- ------------------------------------------------
+CREATE OR REPLACE PROCEDURE actualizar_cotizaciones_vencidas
+IS
+    v_actualizados NUMBER := 0;
+BEGIN
+    UPDATE COTIZACION
+    SET estado = 'VENCIDA'
+    WHERE estado = 'PENDIENTE'
+    AND fecha < SYSDATE - 30; -- Cotizaciones con más de 30 días
+    
+    v_actualizados := SQL%ROWCOUNT;
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Cotizaciones actualizadas a VENCIDA: ' || v_actualizados);
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        DBMS_OUTPUT.PUT_LINE('Error al actualizar cotizaciones vencidas: ' || SQLERRM);
+END actualizar_cotizaciones_vencidas;
+/
+
+-- ------------------------------------------------
+-- FUNCIÓN SIN PARÁMETROS
+-- Obtiene el total de órdenes de compra pendientes
+-- ------------------------------------------------
+CREATE OR REPLACE FUNCTION obtener_total_ordenes_pendientes
+RETURN NUMBER
+IS
+    v_total NUMBER := 0;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_total
+    FROM ORDEN_COM
+    WHERE estado_pedido = 'PENDIENTE';
+    
+    RETURN v_total;
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error al contar órdenes pendientes: ' || SQLERRM);
+        RETURN -1;
+END obtener_total_ordenes_pendientes;
+/
+
+-- ------------------------------------------------
+-- FUNCIÓN SIN PARÁMETROS
+-- Calcula el monto total de todas las cotizaciones activas
+-- ------------------------------------------------
+CREATE OR REPLACE FUNCTION calcular_monto_total_general
+RETURN NUMBER
+IS
+    v_total NUMBER(12,2) := 0;
+BEGIN
+    SELECT NVL(SUM(monto_total), 0)
+    INTO v_total
+    FROM COTIZACION
+    WHERE estado IN ('PENDIENTE', 'APROBADA');
+    
+    RETURN v_total;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error al calcular monto total general: ' || SQLERRM);
+        RETURN 0;
+END calcular_monto_total_general;
+/
+
 
 -- ------------------------------------------------
 -- 6. BLOQUE DE PRUEBA
