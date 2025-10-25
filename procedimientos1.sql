@@ -52,7 +52,7 @@ BEGIN
             cantidad,
             precio_unitario,
             COTIZACION_id_coti,
-            PRODUCTO_id_pro
+            PROD_id_pro
         ) VALUES (
             p_cotizacion_id * 1000 + i,
             p_detalles_prod(i).cantidad,
