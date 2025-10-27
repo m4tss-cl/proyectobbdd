@@ -1,6 +1,4 @@
--- ------------------------------------------------
--- Definiciones de tipos de datos compuestos
--- ------------------------------------------------
+-- definiciones de tipos de datos compuestos
 CREATE OR REPLACE TYPE producto_rec IS OBJECT (
     id_pro      NUMBER,
     cantidad    NUMBER,
@@ -11,12 +9,7 @@ CREATE OR REPLACE TYPE producto_rec IS OBJECT (
 CREATE OR REPLACE TYPE lista_productos_varray IS VARRAY(100) OF producto_rec;
 /
 
-
--- ------------------------------------------------
--- 1. PROCEDIMIENTO ALMACENADO
---    Inserta una nueva cotización y todos sus detalles en una sola operación.
---    Ahora utiliza el tipo VARRAY.
--- ------------------------------------------------
+-- 1. procedimiento almacenado
 
 CREATE OR REPLACE PROCEDURE insertar_cotizacion_completa (
     p_cotizacion_id   IN  NUMBER,
@@ -73,10 +66,8 @@ END insertar_cotizacion_completa;
 /
 
 
--- ------------------------------------------------
 -- 2. FUNCIÓN ALMACENADA
---    Calcula el monto total de una cotización específica.
--- ------------------------------------------------
+--    calcula el monto total de una cotización específica
 
 CREATE OR REPLACE FUNCTION calcular_monto_total_cot (
     p_cotizacion_id IN NUMBER
@@ -105,12 +96,9 @@ EXCEPTION
 END calcular_monto_total_cot;
 /
 
-
--- ------------------------------------------------
 -- 3. TRIGGER
 --    Actualiza el monto total de la cotización después de una inserción,
 --    actualización o eliminación en los detalles.
--- ------------------------------------------------
 CREATE OR REPLACE TRIGGER actualizar_monto_cotizacion
 AFTER INSERT OR UPDATE OR DELETE ON DETALLE_COT
 FOR EACH ROW
@@ -350,10 +338,7 @@ EXCEPTION
 END actualizar_cotizaciones_vencidas;
 /
 
--- ------------------------------------------------
--- FUNCIÓN SIN PARÁMETROS
--- Obtiene el total de órdenes de compra pendientes
--- ------------------------------------------------
+-- funcion sin parametros
 CREATE OR REPLACE FUNCTION obtener_total_ordenes_pendientes
 RETURN NUMBER
 IS
@@ -375,10 +360,7 @@ EXCEPTION
 END obtener_total_ordenes_pendientes;
 /
 
--- ------------------------------------------------
--- FUNCIÓN SIN PARÁMETROS
--- Calcula el monto total de todas las cotizaciones activas
--- ------------------------------------------------
+-- funcion sin parametros
 CREATE OR REPLACE FUNCTION calcular_monto_total_general
 RETURN NUMBER
 IS

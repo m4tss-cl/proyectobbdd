@@ -1,13 +1,7 @@
--- ================================================
 -- PACKAGE CON COMPONENTES PÚBLICOS Y PRIVADOS
--- ================================================
-
 CREATE OR REPLACE PACKAGE UtilidadesBd IS
-    -- ============================================
     -- DECLARACIONES PÚBLICAS (SPEC)
-    -- ============================================
-    
-    -- Procedimiento para generar órdenes de compra a proveedores
+    -- procedimiento para generar órdenes de compra a proveedores
     PROCEDURE generar_orden_proveedor(
         p_proveedor_id IN NUMBER,
         p_producto_id  IN NUMBER,
@@ -15,18 +9,18 @@ CREATE OR REPLACE PACKAGE UtilidadesBd IS
         p_orden_id     OUT NUMBER
     );
     
-    -- Función para verificar si un proveedor maneja un producto específico
+    -- función para verificar si un proveedor maneja un producto específico
     FUNCTION verificar_proveedor_producto(
         p_proveedor_id IN NUMBER,
         p_producto_id  IN NUMBER
     ) RETURN NUMBER;
     
-    -- Procedimiento para procesar múltiples órdenes de forma masiva
+    -- procedimiento para procesar múltiples órdenes de forma masiva
     PROCEDURE procesar_ordenes_masivas(
         p_proveedor_id IN NUMBER
     );
     
-    -- Función pública para calcular total con descuento
+    -- función pública para calcular total con descuento
     FUNCTION calcular_total_con_descuento(
         p_monto IN NUMBER,
         p_cantidad IN NUMBER
@@ -37,14 +31,11 @@ END UtilidadesBd;
 
 CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
 
-    -- ============================================
-    -- COMPONENTES PRIVADOS (SOLO EN BODY)
-    -- ============================================
-    
-    -- Constante privada para descuento mínimo
+    -- COMPONENTES PRIVADOS
+    -- constante privada para descuento mínimo
     c_descuento_minimo CONSTANT NUMBER := 0.05;
     
-    -- Función PRIVADA: Calcula porcentaje de descuento según cantidad
+    -- función privada: calcula porcentaje de descuento según cantidad
     FUNCTION calcular_porcentaje_descuento(p_cantidad IN NUMBER) 
     RETURN NUMBER 
     IS
@@ -63,13 +54,13 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         RETURN v_descuento;
     END calcular_porcentaje_descuento;
     
-    -- Procedimiento PRIVADO: Registra log interno
+    -- procedimiento PRIVADO: registra log interno
     PROCEDURE registrar_log_interno(
         p_mensaje IN VARCHAR2
     ) IS
         PRAGMA AUTONOMOUS_TRANSACTION;
     BEGIN
-        -- En un caso real, esto insertaría en una tabla de logs
+        -- en un caso real, esto insertaría en una tabla de logs
         DBMS_OUTPUT.PUT_LINE('[LOG INTERNO] ' || TO_CHAR(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') || ' - ' || p_mensaje);
         COMMIT;
     EXCEPTION
@@ -77,9 +68,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
             NULL; -- Log silencioso
     END registrar_log_interno;
 
-    -- ============================================
-    -- IMPLEMENTACIÓN DE COMPONENTES PÚBLICOS
-    -- ============================================
+    -- implementacion de componentes publicos
 
     PROCEDURE generar_orden_proveedor(
         p_proveedor_id IN NUMBER,
@@ -90,22 +79,22 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         v_siguiente_id  NUMBER;
         v_proveedor_existe NUMBER;
     BEGIN
-        -- Usar función privada para log
+        -- usar función privada para log
         registrar_log_interno('Iniciando generación de orden para proveedor ' || p_proveedor_id);
         
-        -- Verificar que el proveedor maneja este producto
+        -- verificar que el proveedor maneja este producto
         v_proveedor_existe := verificar_proveedor_producto(p_proveedor_id, p_producto_id);
         
         IF v_proveedor_existe = 0 THEN
             RAISE_APPLICATION_ERROR(-20001, 'El proveedor no maneja este producto');
         END IF;
         
-        -- Obtener siguiente ID para la orden
+        -- obtener siguiente ID para la orden
         SELECT NVL(MAX(id_ord), 0) + 1 
         INTO v_siguiente_id 
         FROM ORDEN_COM;
         
-        -- Insertar orden de compra
+        -- insertar orden de compra
         INSERT INTO ORDEN_COM (
             id_ord,
             fecha_pedido,
@@ -120,7 +109,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
             p_proveedor_id
         );
         
-        -- Insertar detalle de la orden
+        -- insertar detalle de la orden
         INSERT INTO DET_ORDEN_COM (
             id_det_com,
             cantidad,
@@ -165,7 +154,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
             RETURN 0;
     END verificar_proveedor_producto;
     
-    -- Procedimiento público que usa función privada
+    -- procedimiento público que usa función privada
     PROCEDURE procesar_ordenes_masivas(
         p_proveedor_id IN NUMBER
     ) IS
@@ -200,7 +189,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
             DBMS_OUTPUT.PUT_LINE('Error en procesamiento masivo: ' || SQLERRM);
     END procesar_ordenes_masivas;
     
-    -- Función pública que usa función privada interna
+    -- función pública que usa función privada interna
     FUNCTION calcular_total_con_descuento(
         p_monto IN NUMBER,
         p_cantidad IN NUMBER
@@ -208,7 +197,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         v_porcentaje NUMBER;
         v_total NUMBER;
     BEGIN
-        -- Usar función privada
+        -- usar la función privada
         v_porcentaje := calcular_porcentaje_descuento(p_cantidad);
         v_total := p_monto - (p_monto * v_porcentaje);
         
@@ -218,7 +207,7 @@ CREATE OR REPLACE PACKAGE BODY UtilidadesBd IS
         
     EXCEPTION
         WHEN OTHERS THEN
-            RETURN p_monto; -- Devolver monto sin descuento en caso de error
+            RETURN p_monto; -- devolver monto sin descuento en caso de error
     END calcular_total_con_descuento;
 
 END UtilidadesBd;

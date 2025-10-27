@@ -1,8 +1,6 @@
--- ================================================
 -- TRIGGERS A NIVEL DE SENTENCIA Y DE FILA
--- ================================================
 
--- Primero, crear tabla de auditoría si no existe
+-- crear tabla de auditoría si no existe
 CREATE TABLE AUDITORIA_LOG (
     id_log NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     fecha_operacion DATE DEFAULT SYSDATE,
@@ -13,10 +11,8 @@ CREATE TABLE AUDITORIA_LOG (
 );
 /
 
--- ------------------------------------------------
--- TRIGGER A NIVEL DE SENTENCIA (sin FOR EACH ROW)
--- Audita operaciones sobre la tabla ORDEN_COM
--- ------------------------------------------------
+-- trigger a nivel de sentencia (sin FOR EACH ROW)
+-- audita operaciones sobre la tabla ORDEN_COM
 CREATE OR REPLACE TRIGGER auditoria_ordenes_compra
 AFTER INSERT OR UPDATE OR DELETE ON ORDEN_COM
 DECLARE
@@ -24,10 +20,10 @@ DECLARE
     v_tipo_operacion VARCHAR2(10);
     v_cantidad NUMBER := 0;
 BEGIN
-    -- Obtener usuario actual
+    -- obtener usuario actual
     SELECT USER INTO v_usuario FROM DUAL;
     
-    -- Determinar tipo de operación
+    -- determinar tipo de operación
     IF INSERTING THEN
         v_tipo_operacion := 'INSERT';
         -- Contar registros insertados
@@ -35,13 +31,13 @@ BEGIN
         WHERE fecha_pedido >= SYSDATE - INTERVAL '1' SECOND;
     ELSIF UPDATING THEN
         v_tipo_operacion := 'UPDATE';
-        v_cantidad := 1; -- A nivel de sentencia, estimamos
+        v_cantidad := 1; -- a nivel de sentencia, estimamos
     ELSIF DELETING THEN
         v_tipo_operacion := 'DELETE';
         v_cantidad := 1;
     END IF;
     
-    -- Registrar en tabla de auditoría
+    -- registrar en tabla de auditoría
     INSERT INTO AUDITORIA_LOG (
         fecha_operacion,
         usuario,
@@ -66,17 +62,15 @@ EXCEPTION
 END auditoria_ordenes_compra;
 /
 
--- ------------------------------------------------
 -- TRIGGER A NIVEL DE SENTENCIA
--- Valida que no se inserten más de 100 cotizaciones por día
--- ------------------------------------------------
+-- valida que no se inserten más de 100 cotizaciones por día
 CREATE OR REPLACE TRIGGER validar_limite_cotizaciones
 BEFORE INSERT ON COTIZACION
 DECLARE
     v_cotizaciones_hoy NUMBER;
     v_limite CONSTANT NUMBER := 100;
 BEGIN
-    -- Contar cotizaciones del día
+    -- contar cotizaciones del día
     SELECT COUNT(*)
     INTO v_cotizaciones_hoy
     FROM COTIZACION
@@ -84,11 +78,11 @@ BEGIN
     
     IF v_cotizaciones_hoy >= v_limite THEN
         RAISE_APPLICATION_ERROR(-20003, 
-            'Se ha alcanzado el límite de ' || v_limite || 
+            'se ha alcanzado el límite de ' || v_limite || 
             ' cotizaciones por día. Total actual: ' || v_cotizaciones_hoy);
     END IF;
     
-    DBMS_OUTPUT.PUT_LINE('Validación de límite OK. Cotizaciones hoy: ' || v_cotizaciones_hoy);
+    DBMS_OUTPUT.PUT_LINE('validación de límite ok. cotizaciones hoy: ' || v_cotizaciones_hoy);
 
 EXCEPTION
     WHEN OTHERS THEN
@@ -100,10 +94,8 @@ EXCEPTION
 END validar_limite_cotizaciones;
 /
 
--- ------------------------------------------------
 -- TRIGGER A NIVEL DE FILA
--- Valida que la cantidad en detalles sea positiva
--- ------------------------------------------------
+-- valida que la cantidad en detalles sea positiva
 CREATE OR REPLACE TRIGGER validar_cantidad_detalle
 BEFORE INSERT OR UPDATE ON DETALLE_COT
 FOR EACH ROW
